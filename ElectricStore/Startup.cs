@@ -9,6 +9,8 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 
+using ElectricStore.Hubs;
+
 namespace ElectricStore
 {
     public class Startup
@@ -22,6 +24,8 @@ namespace ElectricStore
             {
                 options.IdleTimeout = TimeSpan.FromSeconds(60);
             });
+
+            services.AddSignalR();
 
             services.AddMvc();
         }
@@ -37,6 +41,11 @@ namespace ElectricStore
             app.UseNodeModules(environment.ContentRootPath);
 
             app.UseSession();
+
+            app.UseSignalR(routes =>
+            {
+                routes.MapHub<ChatHub>("/chatHub");
+            });
 
             app.UseMvc(routes =>
             {
